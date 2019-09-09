@@ -3,9 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.3.3",
+    "@material-ui/icons": "^4.2.1",
+    "classnames": "^2.2.6",
+    "formik": "^1.5.8",
+    "formik-material-fields": "0.0.6",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.0"
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.1.0",
+    "rxjs": "^6.5.2",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,5 +36,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "https://ia-escuela.herokuapp.com"
 }
