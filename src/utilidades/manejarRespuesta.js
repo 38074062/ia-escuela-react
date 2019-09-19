@@ -11,7 +11,13 @@ export function manejarRespuesta(respuesta) {
             const error = (data && data.message) || respuesta.statusText;
             return Promise.reject(error);
         }
-        return data;
+        if (!data.estado) {
+            return Promise.reject(data.mensaje);
+        }
+        if (data.datos) {
+            return data.datos;
+        }
+        return data.mensaje;
     });
 }
 

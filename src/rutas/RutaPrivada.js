@@ -8,6 +8,6 @@ export const RutaPrivada = ({ component: Component, ...rest }) => (
         if (!usuarioActual) {
             return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
         }
-        return <Component {...props} />
+        return <Component {...props}{...rest} />
     }} />
 )

@@ -6,6 +6,7 @@
     "@material-ui/core": "^4.3.3",
     "@material-ui/icons": "^4.2.1",
     "classnames": "^2.2.6",
+    "clsx": "^1.0.4",
     "formik": "^1.5.8",
     "formik-material-fields": "0.0.6",
     "react": "^16.9.0",
