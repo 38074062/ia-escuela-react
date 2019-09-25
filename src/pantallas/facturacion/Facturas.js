@@ -7,17 +7,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Edit from "@material-ui/icons/Edit";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
-import { Modal } from '@material-ui/core';
-import NuevaInscripcionModal from './modals/NuevaInscripcionModal';
-import { servicioInscripciones } from '../../servicios/inscripciones.servicio';
 import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import { servicioFacturacion } from '../../servicios/facturacion.servicio';
 
 let styles = theme => ({
     root: {
@@ -75,9 +73,9 @@ class Facturas extends React.Component {
         this.props = props;
     }
     componentDidMount = () => {
-        servicioInscripciones.listarInscripciones().then(
+        servicioFacturacion.listarFacturas().then(
             (respuesta) => {
-                this.setState({ inscripciones: respuesta, cargando: false });
+                this.setState({ facturas: respuesta, cargando: false });
             },
             (error) => {
                 this.setState({ cargando: false });
@@ -101,25 +99,17 @@ class Facturas extends React.Component {
             <React.Fragment>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        <Typography className={classes.typography} variant="h5">Inscripciones</Typography>
-                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={()=>this.setState({ modalNuevaInscripcionVisible: true })}>
+                        <Typography className={classes.typography} variant="h5">Facturas</Typography>
+                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => servicioFacturacion.generarFacturas()}>
                             <AddIcon className={classes.extendedIcon} />
-                            Nueva inscripcion</Fab>
-                        <Modal
-                            aria-labelledby="simple-modal-title"
-                            aria-describedby="simple-modal-description"
-                            open={this.state.modalNuevaInscripcionVisible}
-                            onClose={() => this.setState({ modalNuevaInscripcionVisible: false })}
-                        ><NuevaInscripcionModal cerrarModal={() => this.setState({ modalNuevaInscripcionVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                            Generar facturas</Fab>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.tableCell}>DNI Titular</TableCell>
-                                    <TableCell className={classes.tableCell}>Nombre del alumno</TableCell>
-                                    <TableCell className={classes.tableCell}>Apellido del alumno</TableCell>
-                                    <TableCell className={classes.tableCell}>DNI del alumno</TableCell>
-                                    <TableCell className={classes.tableCell}></TableCell>
-                                    <TableCell className={classes.tableCell}></TableCell>
+                                    <TableCell className={classes.tableCell}>Fecha facturación</TableCell>
+                                    <TableCell className={classes.tableCell}>Titular</TableCell>
+                                    <TableCell className={classes.tableCell}>Total</TableCell>
+                                    <TableCell className={classes.tableCell}>Fecha de vencimiento</TableCell>
                                     <TableCell className={classes.tableCell}></TableCell>
                                 </TableRow>
                             </TableHead>
@@ -130,23 +120,12 @@ class Facturas extends React.Component {
                                             <CircularProgress align="center" className={classes.progress} />
                                         </TableCell>
                                     </TableRow> :
-                                    this.state.inscripciones.slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina).map((inscripcion, index) => (
-                                        <TableRow key={inscripcion.id}>
-                                            <TableCell className={classes.tableCell}>
-                                                {inscripcion.idTitular}
-                                            </TableCell>
-                                            <TableCell className={classes.tableCell}>{inscripcion.alumno.nombre}</TableCell>
-                                            <TableCell className={classes.tableCell}>{inscripcion.alumno.apellido}</TableCell>
-                                            <TableCell className={classes.tableCell}>{inscripcion.alumno.dni}</TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
-                                                Eliminar<DeleteIcon />
-                                            </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
-                                                Modificar<Edit />
-                                            </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
-                                                Eliminar<DeleteIcon />
-                                            </Button></TableCell>
+                                    this.state.facturas.slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina).map((factura, index) => (
+                                        <TableRow key={factura.id}>
+                                            <TableCell className={classes.tableCell}>{factura.fecha}</TableCell>
+                                            <TableCell className={classes.tableCell}>{factura.titular}</TableCell>
+                                            <TableCell className={classes.tableCell}>${factura.total.toFixed(2)}</TableCell>
+                                            <TableCell className={classes.tableCell}>{factura.vencimiento}</TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
                                                 Ver<Edit />
                                             </Button></TableCell>

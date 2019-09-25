@@ -10,9 +10,9 @@ function generarFacturas() {
     const requestOptions = {
         method: 'POST',
         headers: headerAutenticacion(),
-        body: JSON.stringify(body)
+        body: JSON.stringify({})
     };
-    return fetch(`/inscripcion`, requestOptions)
+    return fetch(`/facturas`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;
@@ -24,7 +24,7 @@ function listarFacturas() {
         method: 'GET',
         headers: headerAutenticacion(),
     };
-    return fetch(`/inscripcion`, requestOptions)
+    return fetch(`/facturas`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;

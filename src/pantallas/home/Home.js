@@ -9,12 +9,10 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import { RutaPrivada } from '../../rutas/RutaPrivada';
 import Adicionales from '../adicionales/Adicionales';
 import AltaEmpleado from '../empleados/AltaEmpleado';
@@ -29,6 +27,9 @@ import Empleados from '../empleados/Empleados';
 import Titulares from '../titulares/Titulares';
 import Inscripciones from '../inscripciones/Inscripciones';
 import Titular from '../titulares/Titular';
+import { servicioAutenticacion } from '../../servicios';
+import { Button } from '@material-ui/core';
+import Facturas from '../facturacion/Facturas';
 
 const drawerWidth = 240;
 
@@ -138,9 +139,9 @@ export default function Home(props) {
             Escuela
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+            <Button variant="contained" color="secondary" className="button" onClickCapture={() => servicioAutenticacion.cerrarSesion()}>
+              Cerrar sesión
+            </Button>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -177,6 +178,7 @@ export default function Home(props) {
             </ListItemIcon>
             <ListItemText primary="Ver empleados" />
           </ListItem>
+          <ListSubheader inset>Inscripciones</ListSubheader>
           <ListItem button onClickCapture={() => props.history.push("/inscripciones")}>
             <ListItemIcon>
               <BarChartIcon />
@@ -189,6 +191,14 @@ export default function Home(props) {
             </ListItemIcon>
             <ListItemText primary="Titulares" />
           </ListItem>
+          <ListSubheader inset>Facturación</ListSubheader>
+          <ListItem button onClickCapture={() => props.history.push("/facturas")}>
+            <ListItemIcon>
+              <BarChartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Facturas" />
+          </ListItem>
+          <ListSubheader inset>Administración</ListSubheader>
           <ListItem button onClickCapture={() => props.history.push("/adicionales")}>
             <ListItemIcon>
               <BarChartIcon />
@@ -210,6 +220,7 @@ export default function Home(props) {
               <RutaPrivada path="/empleados/nuevo" exact component={AltaEmpleado} mostrarMensaje={props.mostrarMensaje} />
               <RutaPrivada path="/empleados" exact component={Empleados} mostrarMensaje={props.mostrarMensaje} />
               <RutaPrivada path="/titular" exact component={Titular} mostrarMensaje={props.mostrarMensaje} />
+              <RutaPrivada path="/facturas" exact component={Facturas} mostrarMensaje={props.mostrarMensaje} />
             </Grid>
           </Grid>
         </Container>
