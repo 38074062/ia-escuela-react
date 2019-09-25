@@ -53,15 +53,29 @@ const NuevaInscripcionSchema = Yup.object().shape({
 
 class NuevaInscripcionModal extends React.Component {
     state = {
-        servicios: []
+        servicios: [],
+        inscripcion: {
+            idTitular: 0,
+            alumno: {
+                nombre: "",
+                apellido: "",
+                dni: 0
+            },
+            idServicios: [],
+            servicios: []
+        }
     }
 
     componentDidMount() {
+        if (this.props.inscripcion) {
+            console.log(this.props.inscripcion);
+            this.setState({ inscripcion: this.props.inscripcion });
+        }
         let serviciosConvertidos = [];
         servicioServicios.getServicios().then(servicios => {
-            servicios.map(servicio => {
+            servicios.forEach(servicio => {
                 let servicioObj = {};
-                servicioObj.label = servicio.tipo + "-" + servicio.descripcion + "-" + servicio.precio;
+                servicioObj.label = servicio.categoria + "-" + servicio.nombre + "-" + servicio.tipo + "-" + servicio.precio;
                 servicioObj.value = servicio.id;
                 serviciosConvertidos.push(servicioObj);
             });
@@ -72,18 +86,33 @@ class NuevaInscripcionModal extends React.Component {
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
         var cerrarModal = this.props.cerrarModal;
-        servicioInscripciones.nuevaInscripcion(datos)
-            .then(
-                (respuesta) => {
-                    mostrarMensaje(respuesta);
-                    actions.setSubmitting(false);
-                    cerrarModal();
-                },
-                (error) => {
-                    mostrarMensaje(error);
-                    actions.setSubmitting(false);
-                }
-            );
+        if (this.props.inscripcion) {
+            servicioInscripciones.modificarInscripcion({ id: this.props.inscripcion.id, idServicios: datos.idServicios })
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        actions.setSubmitting(false);
+                        cerrarModal();
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                    }
+                );
+        } else {
+            servicioInscripciones.nuevaInscripcion(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        actions.setSubmitting(false);
+                        cerrarModal();
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                    }
+                );
+        }
     }
 
     render = () => {
@@ -96,13 +125,13 @@ class NuevaInscripcionModal extends React.Component {
                         Nueva inscripción</Typography>
                     <Formik
                         initialValues={{
-                            idTitular: 0,
+                            idTitular: this.props.inscripcion.idTitular || 0,
                             alumno: {
-                                nombre: "",
-                                apellido: "",
-                                dni: 0
+                                nombre: this.props.inscripcion.alumno.nombre || "",
+                                apellido: this.props.inscripcion.alumno.apellido || "",
+                                dni: this.props.inscripcion.alumno.dni || 0
                             },
-                            idServicios: []
+                            idServicios: this.props.inscripcion.servicios.map(s => s.id) || []
                         }}
                         validationSchema={NuevaInscripcionSchema}
                         onSubmit={this.onSubmit.bind(this)}

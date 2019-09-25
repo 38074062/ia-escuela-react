@@ -16,7 +16,6 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import { Modal } from '@material-ui/core';
 import NuevaInscripcionModal from './modals/NuevaInscripcionModal';
-import { servicioInscripciones } from '../../servicios/inscripciones.servicio';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -76,6 +75,7 @@ class Inscripciones extends React.Component {
         this.props = props;
     }
     componentDidMount = () => {
+        /*
         servicioInscripciones.listarInscripciones().then(
             (respuesta) => {
                 this.setState({ inscripciones: respuesta, cargando: false });
@@ -85,6 +85,7 @@ class Inscripciones extends React.Component {
                 this.props.mostrarMensaje(error);
             }
         )
+        */
     }
 
     handleChangePage = (event, pagina) => {

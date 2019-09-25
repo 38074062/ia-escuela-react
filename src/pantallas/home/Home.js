@@ -28,6 +28,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import Empleados from '../empleados/Empleados';
 import Titulares from '../titulares/Titulares';
 import Inscripciones from '../inscripciones/Inscripciones';
+import Titular from '../titulares/Titular';
 
 const drawerWidth = 240;
 
@@ -208,6 +209,7 @@ export default function Home(props) {
               <RutaPrivada path="/adicionales" exact component={Adicionales} mostrarMensaje={props.mostrarMensaje} />
               <RutaPrivada path="/empleados/nuevo" exact component={AltaEmpleado} mostrarMensaje={props.mostrarMensaje} />
               <RutaPrivada path="/empleados" exact component={Empleados} mostrarMensaje={props.mostrarMensaje} />
+              <RutaPrivada path="/titular" exact component={Titular} mostrarMensaje={props.mostrarMensaje} />
             </Grid>
           </Grid>
         </Container>

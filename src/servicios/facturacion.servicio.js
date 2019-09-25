@@ -1,13 +1,12 @@
 import { manejarRespuesta } from '../utilidades';
 import { headerAutenticacion } from '../utilidades/headerAutenticacion';
 
-export const servicioInscripciones = {
-    nuevaInscripcion,
-    modificarInscripcion,
-    listarInscripciones
+export const servicioFacturacion = {
+    generarFacturas,
+    listarFacturas
 };
 
-function nuevaInscripcion(body) {
+function generarFacturas() {
     const requestOptions = {
         method: 'POST',
         headers: headerAutenticacion(),
@@ -20,20 +19,7 @@ function nuevaInscripcion(body) {
         });
 }
 
-function modificarInscripcion(body) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: headerAutenticacion(),
-        body: JSON.stringify(body)
-    };
-    return fetch(`/inscripcion`, requestOptions)
-        .then(manejarRespuesta)
-        .then(respuesta => {
-            return respuesta;
-        });
-}
-
-function listarInscripciones() {
+function listarFacturas() {
     const requestOptions = {
         method: 'GET',
         headers: headerAutenticacion(),

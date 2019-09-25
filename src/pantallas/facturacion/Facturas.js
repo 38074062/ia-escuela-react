@@ -15,11 +15,9 @@ import Grid from '@material-ui/core/Grid';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import { Modal } from '@material-ui/core';
-import { servicioTitulares } from '../../servicios/titulares.servicio';
-import NuevoTitularModal from "./modals/NuevoTitularModal";
+import NuevaInscripcionModal from './modals/NuevaInscripcionModal';
+import { servicioInscripciones } from '../../servicios/inscripciones.servicio';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import View from '@material-ui/icons/Visibility';
 
 let styles = theme => ({
     root: {
@@ -67,19 +65,19 @@ let styles = theme => ({
     }
 });
 
-class Titulares extends React.Component {
+class Facturas extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            titulares: [], cargando: true, message: "", pagina: 0,
-            filasPorPagina: 6, filas: [], modalNuevoTitularVisible: false, titular: null
+            facturas: [], cargando: true, message: "", pagina: 0,
+            filasPorPagina: 6, filas: [], factura: null
         };
         this.props = props;
     }
     componentDidMount = () => {
-        servicioTitulares.listarTitulares().then(
+        servicioInscripciones.listarInscripciones().then(
             (respuesta) => {
-                this.setState({ titulares: respuesta, cargando: false });
+                this.setState({ inscripciones: respuesta, cargando: false });
             },
             (error) => {
                 this.setState({ cargando: false });
@@ -103,24 +101,23 @@ class Titulares extends React.Component {
             <React.Fragment>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        <Typography className={classes.typography} variant="h5">Titulares</Typography>
-                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => this.setState({ modalNuevoTitularVisible: true })}>
+                        <Typography className={classes.typography} variant="h5">Inscripciones</Typography>
+                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={()=>this.setState({ modalNuevaInscripcionVisible: true })}>
                             <AddIcon className={classes.extendedIcon} />
-                            Nuevo titular</Fab>
+                            Nueva inscripcion</Fab>
                         <Modal
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
-                            open={this.state.modalNuevoTitularVisible}
-                            onClose={() => this.setState({ modalNuevoTitularVisible: false })}
-                        ><NuevoTitularModal cerrarModal={() => this.setState({ modalNuevoTitularVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                            open={this.state.modalNuevaInscripcionVisible}
+                            onClose={() => this.setState({ modalNuevaInscripcionVisible: false })}
+                        ><NuevaInscripcionModal cerrarModal={() => this.setState({ modalNuevaInscripcionVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.tableCell}>DNI</TableCell>
-                                    <TableCell className={classes.tableCell}>Nombre</TableCell>
-                                    <TableCell className={classes.tableCell}>Apellido</TableCell>
-                                    <TableCell className={classes.tableCell}>Direccion</TableCell>
-                                    <TableCell className={classes.tableCell}>Mail</TableCell>
+                                    <TableCell className={classes.tableCell}>DNI Titular</TableCell>
+                                    <TableCell className={classes.tableCell}>Nombre del alumno</TableCell>
+                                    <TableCell className={classes.tableCell}>Apellido del alumno</TableCell>
+                                    <TableCell className={classes.tableCell}>DNI del alumno</TableCell>
                                     <TableCell className={classes.tableCell}></TableCell>
                                     <TableCell className={classes.tableCell}></TableCell>
                                     <TableCell className={classes.tableCell}></TableCell>
@@ -133,26 +130,25 @@ class Titulares extends React.Component {
                                             <CircularProgress align="center" className={classes.progress} />
                                         </TableCell>
                                     </TableRow> :
-                                    this.state.titulares.slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina).map((titular, index) => (
-                                        <TableRow key={titular.id}>
+                                    this.state.inscripciones.slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina).map((inscripcion, index) => (
+                                        <TableRow key={inscripcion.id}>
                                             <TableCell className={classes.tableCell}>
-                                                {titular.dni}
+                                                {inscripcion.idTitular}
                                             </TableCell>
-                                            <TableCell className={classes.tableCell}>{titular.nombre}</TableCell>
-                                            <TableCell className={classes.tableCell}>{titular.apellido}</TableCell>
-                                            <TableCell className={classes.tableCell}>{titular.direccion}</TableCell>
-                                            <TableCell className={classes.tableCell}>{titular.mail}</TableCell>
+                                            <TableCell className={classes.tableCell}>{inscripcion.alumno.nombre}</TableCell>
+                                            <TableCell className={classes.tableCell}>{inscripcion.alumno.apellido}</TableCell>
+                                            <TableCell className={classes.tableCell}>{inscripcion.alumno.dni}</TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
                                                 Eliminar<DeleteIcon />
                                             </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
                                                 Modificar<Edit />
                                             </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.props.history.push({
-                                                pathname: "/titular",
-                                                state: { idTitular: titular.id }
-                                            })}>
-                                                Ver<View />
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
+                                                Eliminar<DeleteIcon />
+                                            </Button></TableCell>
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
+                                                Ver<Edit />
                                             </Button></TableCell>
                                         </TableRow>
                                     ))
@@ -182,4 +178,4 @@ class Titulares extends React.Component {
     }
 }
 
-export default withStyles(styles)(Titulares)
+export default withStyles(styles)(Facturas)

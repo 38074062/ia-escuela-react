@@ -2,9 +2,9 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles'
 import { Typography, Button, Grid, CssBaseline, CircularProgress } from '@material-ui/core';
 import { Formik, Form } from 'formik';
-import { FormikTextField, FormikSelectField } from 'formik-material-fields';
+import { FormikTextField } from 'formik-material-fields';
 import * as Yup from 'yup';
-import { servicioServicios } from '../../../servicios/servicios.servicio';
+import { servicioTitulares } from '../../../servicios/titulares.servicio';
 
 let styles = theme => ({
     container: {
@@ -38,39 +38,17 @@ let styles = theme => ({
     },
 });
 
-const NuevoAdicionalSchema = Yup.object().shape({
-    categoria: Yup.string()
-        .required('Seleccione la categoria'),
-    nombre: Yup.string()
-        .required('Ingrese el nombre'),
-    tipo: Yup.string()
-        .required('Ingrese el tipo'),
-    precio: Yup.number()
-        .required('Ingrese el precio'),
+const CobroFacturaSchema = Yup.object().shape({
+    monto: Yup.number()
+        .required('Ingrese el monto'),
+    fecha: Yup.date().required('Ingrese el nombre del titular'),
 });
 
-class NuevoAdicionalModal extends React.Component {
-    state = {
-        categorias: []
-    }
-
-    componentDidMount() {
-        let configuraciones = [];
-        servicioServicios.getConfiguracion().then(respuesta => {
-            respuesta.forEach(item => {
-                let configuracion = {};
-                configuracion.label = item;
-                configuracion.value = item;
-                configuraciones.push(configuracion);
-            });
-            this.setState({ categorias: configuraciones });
-        })
-    }
-
+class CobroFacturaModal extends React.Component {
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
         var cerrarModal = this.props.cerrarModal;
-        servicioServicios.nuevoServicio(datos)
+        servicioTitulares.registrarCobro(datos)
             .then(
                 (respuesta) => {
                     mostrarMensaje(respuesta);
@@ -91,23 +69,19 @@ class NuevoAdicionalModal extends React.Component {
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Typography component="h1" variant="h5">
-                        Nuevo servicio</Typography>
+                        Pago</Typography>
                     <Formik
                         initialValues={{
-                            categoria: "",
-                            nombre: "",
-                            tipo: "",
-                            precio: 0
+                            titularId: this.props.titularId,
+                            facturaId: this.props.facturaId
                         }}
-                        validationSchema={NuevoAdicionalSchema}
+                        validationSchema={CobroFacturaSchema}
                         onSubmit={this.onSubmit.bind(this)}
-                        render={({ values, isSubmitting }) => (
+                        render={({ isSubmitting }) => (
                             <Form className={classes.form}>
                                 <Grid item xs={12}>
-                                    <FormikSelectField name="categoria" label="Categoria" margin="normal" fullWidth options={this.state.categorias} />
-                                    <FormikTextField name="nombre" label="Nombre" margin="normal" fullWidth />
-                                    <FormikTextField name="tipo" label="Tipo" margin="normal" fullWidth />
-                                    <FormikTextField name="precio" label="Precio" type="number" margin="normal" fullWidth />
+                                    <FormikTextField name="fecha" label="Fecha" type="date" margin="normal" fullWidth />
+                                    <FormikTextField name="monto" label="Monto" type="number" margin="normal" fullWidth />
                                 </Grid>
                                 <Grid container
                                     alignItems="center"
@@ -119,7 +93,7 @@ class NuevoAdicionalModal extends React.Component {
                                         color="primary"
                                         className={classes.submit}
                                         disabled={isSubmitting}
-                                    > Guardar</Button>
+                                    >Registrar pago</Button>
                                     {isSubmitting &&
                                         <CircularProgress align="center" />
                                     }
@@ -132,4 +106,4 @@ class NuevoAdicionalModal extends React.Component {
     }
 }
 
-export default withStyles(styles)(NuevoAdicionalModal)
+export default withStyles(styles)(CobroFacturaModal)
