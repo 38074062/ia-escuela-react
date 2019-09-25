@@ -75,10 +75,12 @@ class AltaEmpleado extends Component {
 
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
+        var navegacion = this.props.history;
         servicioEmpleados.altaEmpleado(datos)
             .then(
                 (respuesta) => {
                     mostrarMensaje(respuesta);
+                    navegacion.push("/empleados");
                 },
                 (error) => {
                     mostrarMensaje(error);

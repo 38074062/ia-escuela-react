@@ -18,6 +18,7 @@ import { Modal } from '@material-ui/core';
 import NuevaInscripcionModal from './modals/NuevaInscripcionModal';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import { servicioInscripciones } from '../../servicios/inscripciones.servicio';
 
 let styles = theme => ({
     root: {
@@ -75,7 +76,10 @@ class Inscripciones extends React.Component {
         this.props = props;
     }
     componentDidMount = () => {
-        /*
+        this.getInscripciones();
+    }
+
+    getInscripciones = () => {
         servicioInscripciones.listarInscripciones().then(
             (respuesta) => {
                 this.setState({ inscripciones: respuesta, cargando: false });
@@ -84,8 +88,7 @@ class Inscripciones extends React.Component {
                 this.setState({ cargando: false });
                 this.props.mostrarMensaje(error);
             }
-        )
-        */
+        );
     }
 
     handleChangePage = (event, pagina) => {
@@ -104,7 +107,7 @@ class Inscripciones extends React.Component {
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Inscripciones</Typography>
-                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={()=>this.setState({ modalNuevaInscripcionVisible: true })}>
+                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => this.setState({ modalNuevaInscripcionVisible: true })}>
                             <AddIcon className={classes.extendedIcon} />
                             Nueva inscripcion</Fab>
                         <Modal
@@ -112,7 +115,10 @@ class Inscripciones extends React.Component {
                             aria-describedby="simple-modal-description"
                             open={this.state.modalNuevaInscripcionVisible}
                             onClose={() => this.setState({ modalNuevaInscripcionVisible: false })}
-                        ><NuevaInscripcionModal cerrarModal={() => this.setState({ modalNuevaInscripcionVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                        ><NuevaInscripcionModal cerrarModal={() => {
+                            this.setState({ modalNuevaInscripcionVisible: false });
+                            this.getInscripciones();
+                        }} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
@@ -135,7 +141,7 @@ class Inscripciones extends React.Component {
                                     this.state.inscripciones.slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina).map((inscripcion, index) => (
                                         <TableRow key={inscripcion.id}>
                                             <TableCell className={classes.tableCell}>
-                                                {inscripcion.idTitular}
+                                                {inscripcion.dniTitular}
                                             </TableCell>
                                             <TableCell className={classes.tableCell}>{inscripcion.alumno.nombre}</TableCell>
                                             <TableCell className={classes.tableCell}>{inscripcion.alumno.apellido}</TableCell>
@@ -145,9 +151,6 @@ class Inscripciones extends React.Component {
                                             </Button></TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
                                                 Modificar<Edit />
-                                            </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
-                                                Eliminar<DeleteIcon />
                                             </Button></TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
                                                 Ver<Edit />

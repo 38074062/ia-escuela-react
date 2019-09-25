@@ -9,6 +9,7 @@
     "clsx": "^1.0.4",
     "formik": "^1.5.8",
     "formik-material-fields": "0.0.6",
+    "mui-datatables": "^2.11.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",

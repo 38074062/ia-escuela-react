@@ -1,21 +1,82 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Edit from "@material-ui/icons/Edit";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { servicioFacturacion } from '../../servicios/facturacion.servicio';
+import MUIDataTable from "mui-datatables";
+
+const columnas = [
+    {
+        name: "fecha",
+        label: "Fecha",
+        options: {
+            filter: true,
+            sort: true,
+        }
+    },
+    {
+        name: "titular",
+        label: "Titular",
+        options: {
+            filter: true,
+            sort: true,
+        }
+    },
+    {
+        name: "vencimiento",
+        label: "Fecha de vencimiento",
+        options: {
+            filter: true,
+            sort: false,
+        }
+    },
+    {
+        name: "total",
+        label: "Monto",
+        options: {
+            filter: true,
+            sort: false,
+        }
+    },
+];
+
+const opciones = {
+    textLabels: {
+      body: {
+        noMatch: "Sorry, no matching records found",
+        toolTip: "Sort",
+        columnHeaderTooltip: column => `Sort for ${column.label}`
+      },
+      pagination: {
+        next: "Next Page",
+        previous: "Previous Page",
+        rowsPerPage: "Rows per page:",
+        displayRows: "of",
+      },
+      toolbar: {
+        search: "Search",
+        downloadCsv: "Download CSV",
+        print: "Print",
+        viewColumns: "View Columns",
+        filterTable: "Filter Table",
+      },
+      filter: {
+        all: "Todos",
+        title: "Filtros",
+        reset: "Reestablecer",
+      },
+      viewColumns: {
+        title: "Show Columns",
+        titleAria: "Show/Hide Table Columns",
+      },
+      selectedRows: {
+        text: "row(s) selected",
+        delete: "Delete",
+        deleteAria: "Delete Selected Rows",
+      },
+    }
+  }
 
 let styles = theme => ({
     root: {
@@ -84,73 +145,20 @@ class Facturas extends React.Component {
         )
     }
 
-    handleChangePage = (event, pagina) => {
-        this.setState({ pagina });
-    };
-
-    handleChangeRowsPerPage = event => {
-        this.setState({ pagina: 0, filasPorPagina: event.target.value });
-    };
-
     render = () => {
         let { classes } = this.props;
-        let { filas, filasPorPagina, pagina } = this.state;
         return (
             <React.Fragment>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                        <Typography className={classes.typography} variant="h5">Facturas</Typography>
-                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => servicioFacturacion.generarFacturas()}>
-                            <AddIcon className={classes.extendedIcon} />
-                            Generar facturas</Fab>
-                        <Table className={classes.table} size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell className={classes.tableCell}>Fecha facturación</TableCell>
-                                    <TableCell className={classes.tableCell}>Titular</TableCell>
-                                    <TableCell className={classes.tableCell}>Total</TableCell>
-                                    <TableCell className={classes.tableCell}>Fecha de vencimiento</TableCell>
-                                    <TableCell className={classes.tableCell}></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.cargando ?
-                                    <TableRow>
-                                        <TableCell colSpan={8} align="center">
-                                            <CircularProgress align="center" className={classes.progress} />
-                                        </TableCell>
-                                    </TableRow> :
-                                    this.state.facturas.slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina).map((factura, index) => (
-                                        <TableRow key={factura.id}>
-                                            <TableCell className={classes.tableCell}>{factura.fecha}</TableCell>
-                                            <TableCell className={classes.tableCell}>{factura.titular}</TableCell>
-                                            <TableCell className={classes.tableCell}>${factura.total.toFixed(2)}</TableCell>
-                                            <TableCell className={classes.tableCell}>{factura.vencimiento}</TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
-                                                Ver<Edit />
-                                            </Button></TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    <TablePagination
-                                        rowsPerPageOptions={[5, 10, 25]}
-                                        colSpan={3}
-                                        count={filas.length}
-                                        rowsPerPage={filasPorPagina}
-                                        page={pagina}
-                                        SelectProps={{
-                                            native: true,
-                                        }}
-                                        onChangePage={this.handleChangePage}
-                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    />
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </Paper>
+                    <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => servicioFacturacion.generarFacturas()}>
+                        <AddIcon className={classes.extendedIcon} />
+                        Generar facturas</Fab>
+                    <MUIDataTable
+                        title={"Facturas"}
+                        data={this.state.facturas}
+                        columns={columnas}
+                        options={opciones}
+                    />
                 </Grid>
             </React.Fragment>
         );

@@ -77,6 +77,10 @@ class Titulares extends React.Component {
         this.props = props;
     }
     componentDidMount = () => {
+        this.getTitulares();
+    }
+
+    getTitulares = () => {
         servicioTitulares.listarTitulares().then(
             (respuesta) => {
                 this.setState({ titulares: respuesta, cargando: false });
@@ -85,7 +89,7 @@ class Titulares extends React.Component {
                 this.setState({ cargando: false });
                 this.props.mostrarMensaje(error);
             }
-        )
+        );
     }
 
     handleChangePage = (event, pagina) => {
@@ -112,7 +116,10 @@ class Titulares extends React.Component {
                             aria-describedby="simple-modal-description"
                             open={this.state.modalNuevoTitularVisible}
                             onClose={() => this.setState({ modalNuevoTitularVisible: false })}
-                        ><NuevoTitularModal cerrarModal={() => this.setState({ modalNuevoTitularVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                        ><NuevoTitularModal cerrarModal={() => {
+                            this.setState({ modalNuevoTitularVisible: false });
+                            this.getTitulares();
+                        }} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>

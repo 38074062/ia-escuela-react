@@ -95,7 +95,7 @@ class CargaHorariaModal extends React.Component {
                                     <FormikTextField name="precio" label="Precio" type="number" margin="normal" fullWidth />
                                     <FormikTextField name="descuento" label="Descuento" type="number" margin="normal" fullWidth />
                                     <FormikTextField name="horario" label="Horario" margin="normal" fullWidth />
-                                    <FormikTextField name="horas" label="Horas" type="number" margin="normal" fullWidth />/>
+                                    <FormikTextField name="horas" label="Horas" type="number" margin="normal" fullWidth />
                                 </Grid>
                                 <Grid container
                                     alignItems="center"

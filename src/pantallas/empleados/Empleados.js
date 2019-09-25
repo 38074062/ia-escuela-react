@@ -136,7 +136,7 @@ class Empleados extends React.Component {
                                             <TableCell className={classes.tableCell}>{empleado.nombre}</TableCell>
                                             <TableCell className={classes.tableCell}>{empleado.apellido}</TableCell>
                                             <TableCell className={classes.tableCell}>{empleado.cuit}</TableCell>
-                                            <TableCell className={classes.tableCell}>{empleado.mail}</TableCell>
+                                            <TableCell className={classes.tableCell}>{empleado.nombreUsuario}</TableCell>
                                             <TableCell className={classes.tableCell}>{empleado.cargo}</TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
                                                 Eliminar<DeleteIcon />
