@@ -133,9 +133,9 @@ class Inscripciones extends React.Component {
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                             open={this.state.modalNuevaInscripcionVisible}
-                            onClose={() => this.setState({ modalNuevaInscripcionVisible: false })}
+                            onClose={() => this.setState({ modalNuevaInscripcionVisible: false, inscripcion: null })}
                         ><NuevaInscripcionModal cerrarModal={() => {
-                            this.setState({ modalNuevaInscripcionVisible: false });
+                            this.setState({ modalNuevaInscripcionVisible: false, inscripcion: null });
                             this.getInscripciones();
                         }} mostrarMensaje={this.props.mostrarMensaje} inscripcion={this.state.inscripcion} /></Modal>
                         <Table className={classes.table} size="small">

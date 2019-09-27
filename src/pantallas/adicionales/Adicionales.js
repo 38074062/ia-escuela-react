@@ -122,7 +122,7 @@ class Adicionales extends React.Component {
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Servicios</Typography>
-                            <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar este servicio?"} onClose={this.onEliminarServicio} visible={this.state.alertaVisible} />
+                        <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar este servicio?"} onClose={this.onEliminarServicio} visible={this.state.alertaVisible} />
                         <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => this.setState({ modalNuevoAdicionalVisible: true })}>
                             <AddIcon className={classes.extendedIcon} />
                             Nuevo servicio</Fab>
@@ -130,8 +130,8 @@ class Adicionales extends React.Component {
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                             open={this.state.modalNuevoAdicionalVisible}
-                            onClose={() => this.setState({ modalNuevoAdicionalVisible: false })}
-                        ><NuevoAdicionalModal cerrarModal={() => this.setState({ modalNuevoAdicionalVisible: false })} mostrarMensaje={this.props.mostrarMensaje} servicio={this.state.servicio}/></Modal>
+                            onClose={() => this.setState({ modalNuevoAdicionalVisible: false, servicio: null })}
+                        ><NuevoAdicionalModal cerrarModal={() => this.setState({ modalNuevoAdicionalVisible: false, servicio: null })} mostrarMensaje={this.props.mostrarMensaje} servicio={this.state.servicio} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>

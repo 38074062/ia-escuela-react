@@ -133,11 +133,11 @@ class Titulares extends React.Component {
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                             open={this.state.modalNuevoTitularVisible}
-                            onClose={() => this.setState({ modalNuevoTitularVisible: false })}
+                            onClose={() => this.setState({ modalNuevoTitularVisible: false, titular: null })}
                         ><NuevoTitularModal cerrarModal={() => {
-                            this.setState({ modalNuevoTitularVisible: false });
+                            this.setState({ modalNuevoTitularVisible: false, titular: null });
                             this.getTitulares();
-                        }} mostrarMensaje={this.props.mostrarMensaje} titular={this.state.titular}/></Modal>
+                        }} mostrarMensaje={this.props.mostrarMensaje} titular={this.state.titular} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>

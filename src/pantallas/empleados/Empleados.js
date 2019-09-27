@@ -124,8 +124,8 @@ class Empleados extends React.Component {
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                             open={this.state.modalCargaHorariaVisible}
-                            onClose={() => this.setState({ modalCargaHorariaVisible: false })}
-                        ><CargaHorariaModal id={this.state.empleado} cerrarModal={() => this.setState({ modalCargaHorariaVisible: false })} mostrarMensaje={this.props.mostrarMensaje} empleado={this.state.empleado} /></Modal>
+                            onClose={() => this.setState({ modalCargaHorariaVisible: false, empleado: null })}
+                        ><CargaHorariaModal id={this.state.empleado} cerrarModal={() => this.setState({ modalCargaHorariaVisible: false, empleado: null })} mostrarMensaje={this.props.mostrarMensaje} empleado={this.state.empleado} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
