@@ -157,7 +157,7 @@ class Adicionales extends React.Component {
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button" onClickCapture={() => this.setState({ alertaVisible: true, servicio: adicional })}>
                                                 Eliminar<DeleteIcon />
                                             </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.setState({ modalNuevoAdicionalVisible: true, servicio: adicional })}>
                                                 Modificar<Edit />
                                             </Button></TableCell>
                                         </TableRow>
