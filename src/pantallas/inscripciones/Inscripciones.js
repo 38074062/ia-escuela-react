@@ -108,6 +108,7 @@ class Inscripciones extends React.Component {
                 (respuesta) => {
                     this.setState({ cargando: false });
                     this.props.mostrarMensaje(respuesta);
+                    this.getInscripciones();
                 },
                 (error) => {
                     this.setState({ cargando: false });

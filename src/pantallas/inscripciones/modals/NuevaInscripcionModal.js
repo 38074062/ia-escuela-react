@@ -137,10 +137,10 @@ class NuevaInscripcionModal extends React.Component {
                         render={({ isSubmitting }) => (
                             <Form className={classes.form}>
                                 <Grid item xs={12}>
-                                    <FormikTextField name="idTitular" label="DNI titular" type="number" margin="normal" fullWidth />
-                                    <FormikTextField name="alumno.nombre" label="Nombre del alumno" margin="normal" fullWidth />
-                                    <FormikTextField name="alumno.apellido" label="Apellido del alumno" margin="normal" fullWidth />
-                                    <FormikTextField name="alumno.dni" label="DNI del alumno" margin="normal" type="number" fullWidth />
+                                    <FormikTextField name="idTitular" label="DNI titular" type="number" margin="normal" fullWidth disabled={this.props.inscripcion}/>
+                                    <FormikTextField name="alumno.nombre" label="Nombre del alumno" margin="normal" fullWidth disabled={this.props.inscripcion}/>
+                                    <FormikTextField name="alumno.apellido" label="Apellido del alumno" margin="normal" fullWidth disabled={this.props.inscripcion}/>
+                                    <FormikTextField name="alumno.dni" label="DNI del alumno" margin="normal" type="number" fullWidth disabled={this.props.inscripcion}/>
                                     <FormikSelectField name="idServicios" multiple label="Servicios" margin="normal" fullWidth options={this.state.servicios} />
                                 </Grid>
                                 <Grid container
