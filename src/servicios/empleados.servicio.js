@@ -5,7 +5,9 @@ export const servicioEmpleados = {
     altaEmpleado,
     listarEmpleados,
     listarCargos,
-    agregarCargaHoraria
+    agregarCargaHoraria,
+    eliminarEmpleado,
+    modificarEmpleado
 };
 
 function altaEmpleado(body) {
@@ -52,6 +54,31 @@ function listarCargos() {
         headers: headerAutenticacion(),
     };
     return fetch(`/cargos`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function modificarEmpleado(body) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: headerAutenticacion(),
+        body: JSON.stringify(body)
+    };
+    return fetch(`/empleados`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function eliminarEmpleado(id) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: headerAutenticacion(),
+    };
+    return fetch(`/empleados/${id}`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;

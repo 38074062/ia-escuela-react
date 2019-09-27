@@ -124,13 +124,13 @@ class NuevaInscripcionModal extends React.Component {
                         Nueva inscripción</Typography>
                     <Formik
                         initialValues={{
-                            idTitular: this.props.inscripcion && this.props.inscripcion.idTitular || 0,
+                            idTitular: (this.props.inscripcion && this.props.inscripcion.dniTitular) || 0,
                             alumno: {
-                                nombre: this.props.inscripcion && this.props.inscripcion.alumno.nombre || "",
-                                apellido: this.props.inscripcion && this.props.inscripcion.alumno.apellido || "",
-                                dni: this.props.inscripcion && this.props.inscripcion.alumno.dni || 0
+                                nombre: (this.props.inscripcion && this.props.inscripcion.alumno.nombre) || "",
+                                apellido: (this.props.inscripcion && this.props.inscripcion.alumno.apellido) || "",
+                                dni: (this.props.inscripcion && this.props.inscripcion.alumno.dni) || 0
                             },
-                            idServicios: this.props.inscripcion && this.props.inscripcion.servicios.map(s => s.id) || []
+                            idServicios: (this.props.inscripcion && this.props.inscripcion.servicios.map(s => s.id)) || []
                         }}
                         validationSchema={NuevaInscripcionSchema}
                         onSubmit={this.onSubmit.bind(this)}

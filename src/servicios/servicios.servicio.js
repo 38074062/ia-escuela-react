@@ -4,7 +4,9 @@ import { headerAutenticacion } from '../utilidades/headerAutenticacion';
 export const servicioServicios = {
     getServicios,
     nuevoServicio,
-    getConfiguracion
+    getConfiguracion,
+    modificarServicio,
+    eliminarServicio
 };
 
 function nuevoServicio(body) {
@@ -39,6 +41,31 @@ function getConfiguracion(){
         headers: headerAutenticacion()
     };
     return fetch(`/servicios/categorias`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function modificarServicio(body) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: headerAutenticacion(),
+        body: JSON.stringify(body)
+    };
+    return fetch(`/servicios`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function eliminarServicio(id) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: headerAutenticacion(),
+    };
+    return fetch(`/servicios/${id}`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;

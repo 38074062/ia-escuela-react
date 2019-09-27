@@ -4,7 +4,8 @@ import { headerAutenticacion } from '../utilidades/headerAutenticacion';
 export const servicioInscripciones = {
     nuevaInscripcion,
     modificarInscripcion,
-    listarInscripciones
+    listarInscripciones,
+    eliminarInscripcion
 };
 
 function nuevaInscripcion(body) {
@@ -39,6 +40,18 @@ function listarInscripciones() {
         headers: headerAutenticacion(),
     };
     return fetch(`/inscripcion`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function eliminarInscripcion(id) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: headerAutenticacion(),
+    };
+    return fetch(`/inscripcion/${id}`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;

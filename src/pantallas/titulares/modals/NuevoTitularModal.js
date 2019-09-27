@@ -50,21 +50,39 @@ const NuevoTitularSchema = Yup.object().shape({
 });
 
 class NuevoTitularModal extends React.Component {
+
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
         var cerrarModal = this.props.cerrarModal;
-        servicioTitulares.nuevoTitular(datos)
-            .then(
-                (respuesta) => {
-                    mostrarMensaje(respuesta);
-                    actions.setSubmitting(false);
-                    cerrarModal();
-                },
-                (error) => {
-                    mostrarMensaje(error);
-                    actions.setSubmitting(false);
-                }
-            );
+        if (this.props.titular) {
+            datos.id = this.props.titular.id;
+            servicioTitulares.modificarTitular(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        actions.setSubmitting(false);
+                        cerrarModal();
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                    }
+                );
+        } else {
+            servicioTitulares.nuevoTitular(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        actions.setSubmitting(false);
+                        cerrarModal();
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                    }
+                );
+        }
+
     }
 
     render = () => {
@@ -77,12 +95,12 @@ class NuevoTitularModal extends React.Component {
                         Nuevo titular</Typography>
                     <Formik
                         initialValues={{
-                            nombre: "",
-                            apellido: "",
-                            dni: 0,
-                            direccion: "",
-                            email: "",
-                            cuentaBancaria: "",
+                            nombre: (this.props.titular && this.props.titular.nombre) || "",
+                            apellido: (this.props.titular && this.props.titular.apellido) || "",
+                            dni: (this.props.titular && this.props.titular.dni) || 0,
+                            direccion: (this.props.titular && this.props.titular.direccion) || "",
+                            email: (this.props.titular && this.props.titular.email) || "",
+                            cuentaBancaria: (this.props.titular && this.props.titular.cuentaBancaria) || "",
                         }}
                         validationSchema={NuevoTitularSchema}
                         onSubmit={this.onSubmit.bind(this)}

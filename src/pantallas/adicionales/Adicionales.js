@@ -19,6 +19,7 @@ import NuevoAdicionalModal from './modals/NuevoAdicionalModal';
 import { servicioServicios } from '../../servicios/servicios.servicio';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import Alerta from '../../componentes/Alerta';
 
 let styles = theme => ({
     root: {
@@ -71,7 +72,8 @@ class Adicionales extends React.Component {
         super();
         this.state = {
             adicionales: [], cargando: true, message: "", pagina: 0,
-            filasPorPagina: 6, filas: [], modalNuevoAdicionalVisible: false, adicional: null
+            filasPorPagina: 6, filas: [], modalNuevoAdicionalVisible: false, alertaVisible: false,
+            servicio: null,
         };
         this.props = props;
     }
@@ -95,6 +97,23 @@ class Adicionales extends React.Component {
         this.setState({ pagina: 0, filasPorPagina: event.target.value });
     };
 
+    onEliminarServicio = (eliminar) => {
+        this.setState({ alertaVisible: false });
+        if (eliminar) {
+            servicioServicios.eliminarServicio(this.state.servicio.id).then(
+                (respuesta) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(respuesta);
+                },
+                (error) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(error);
+                }
+            );
+        }
+    }
+
+
     render = () => {
         let { classes } = this.props;
         let { filas, filasPorPagina, pagina } = this.state;
@@ -103,7 +122,8 @@ class Adicionales extends React.Component {
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Servicios</Typography>
-                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={()=>this.setState({ modalNuevoAdicionalVisible: true })}>
+                            <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar este servicio?"} onClose={this.onEliminarServicio} visible={this.state.alertaVisible} />
+                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => this.setState({ modalNuevoAdicionalVisible: true })}>
                             <AddIcon className={classes.extendedIcon} />
                             Nuevo servicio</Fab>
                         <Modal
@@ -111,7 +131,7 @@ class Adicionales extends React.Component {
                             aria-describedby="simple-modal-description"
                             open={this.state.modalNuevoAdicionalVisible}
                             onClose={() => this.setState({ modalNuevoAdicionalVisible: false })}
-                        ><NuevoAdicionalModal cerrarModal={() => this.setState({ modalNuevoAdicionalVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                        ><NuevoAdicionalModal cerrarModal={() => this.setState({ modalNuevoAdicionalVisible: false })} mostrarMensaje={this.props.mostrarMensaje} servicio={this.state.servicio}/></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
@@ -134,7 +154,7 @@ class Adicionales extends React.Component {
                                             <TableCell className={classes.tableCell}>{adicional.nombre}</TableCell>
                                             <TableCell className={classes.tableCell}>{adicional.tipo}</TableCell>
                                             <TableCell className={classes.tableCell}>{adicional.precio}</TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button" onClickCapture={() => this.setState({ alertaVisible: true, servicio: adicional })}>
                                                 Eliminar<DeleteIcon />
                                             </Button></TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" >

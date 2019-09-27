@@ -17,6 +17,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { servicioEmpleados } from '../../servicios/empleados.servicio';
 import { Modal } from '@material-ui/core';
 import CargaHorariaModal from './modals/CargaHorariaModal';
+import Alerta from '../../componentes/Alerta';
 
 let styles = theme => ({
     root: {
@@ -69,7 +70,8 @@ class Empleados extends React.Component {
         super();
         this.state = {
             empleados: [], cargando: true, message: "", pagina: 0,
-            filasPorPagina: 6, filas: [], modalCargaHorariaVisible: false, empleado: null
+            filasPorPagina: 6, filas: [], modalCargaHorariaVisible: false, empleado: null,
+            alertaVisible: false
         };
         this.props = props;
     }
@@ -93,6 +95,22 @@ class Empleados extends React.Component {
         this.setState({ pagina: 0, filasPorPagina: event.target.value });
     };
 
+    onEliminarEmpleado = (eliminar) => {
+        this.setState({ alertaVisible: false });
+        if (eliminar) {
+            servicioEmpleados.eliminarEmpleado(this.state.empleado.id).then(
+                (respuesta) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(respuesta);
+                },
+                (error) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(error);
+                }
+            );
+        }
+    }
+
     render = () => {
         let { classes } = this.props;
         let { filas, filasPorPagina, pagina } = this.state;
@@ -101,12 +119,13 @@ class Empleados extends React.Component {
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Empleados</Typography>
+                        <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar este empleado?"} onClose={this.onEliminarEmpleado} visible={this.state.alertaVisible} />
                         <Modal
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
                             open={this.state.modalCargaHorariaVisible}
                             onClose={() => this.setState({ modalCargaHorariaVisible: false })}
-                        ><CargaHorariaModal id={this.state.empleado} cerrarModal={() => this.setState({ modalCargaHorariaVisible: false })} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                        ><CargaHorariaModal id={this.state.empleado} cerrarModal={() => this.setState({ modalCargaHorariaVisible: false })} mostrarMensaje={this.props.mostrarMensaje} empleado={this.state.empleado} /></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
@@ -138,7 +157,13 @@ class Empleados extends React.Component {
                                             <TableCell className={classes.tableCell}>{empleado.cuit}</TableCell>
                                             <TableCell className={classes.tableCell}>{empleado.nombreUsuario}</TableCell>
                                             <TableCell className={classes.tableCell}>{empleado.cargo}</TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.props.history.push({
+                                                pathname: "/empleados/nuevo",
+                                                state: { empleado }
+                                            })}>
+                                                Modificar<Edit />
+                                            </Button></TableCell>
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button" onClickCapture={() => this.setState({ alertaVisible: true, empleado: empleado })}>
                                                 Eliminar<DeleteIcon />
                                             </Button></TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.setState({ modalCargaHorariaVisible: true, empleado: empleado.id })}>

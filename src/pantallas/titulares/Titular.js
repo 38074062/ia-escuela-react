@@ -14,6 +14,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import NuevaInscripcionModal from '../inscripciones/modals/NuevaInscripcionModal';
+import { servicioInscripciones } from '../../servicios/inscripciones.servicio';
+import Alerta from '../../componentes/Alerta';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 let styles = theme => ({
     root: {
@@ -72,7 +75,8 @@ class Titular extends React.Component {
         cobroModalVisible: false,
         serviciosModalVisible: false,
         idFactura: -1,
-        inscripcionSeleccionada: null
+        inscripcionSeleccionada: null,
+        alertaVisible: false
     }
 
     componentDidMount = () => {
@@ -89,6 +93,22 @@ class Titular extends React.Component {
                 this.props.mostrarMensaje(error);
             }
         );
+    }
+
+    onEliminarInscripcion = (eliminar) => {
+        this.setState({ alertaVisible: false });
+        if (eliminar) {
+            servicioInscripciones.eliminarInscripcion(this.state.inscripcionSeleccionada.id).then(
+                (respuesta) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(respuesta);
+                },
+                (error) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(error);
+                }
+            );
+        }
     }
 
     render = () => {
@@ -113,6 +133,7 @@ class Titular extends React.Component {
                     this.setState({ serviciosModalVisible: false });
                     this.getTitular();
                 }} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar esta inscripcion?"} onClose={this.onEliminarInscripcion} visible={this.state.alertaVisible} />
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Titular</Typography>
@@ -153,6 +174,7 @@ class Titular extends React.Component {
                                                 <TableCell className={classes.tableCell}>Alumno</TableCell>
                                                 <TableCell className={classes.tableCell}>Servicios asociados</TableCell>
                                                 <TableCell className={classes.tableCell}></TableCell>
+                                                <TableCell className={classes.tableCell}></TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -160,9 +182,14 @@ class Titular extends React.Component {
                                                 <TableRow key={inscripcion.id}>
                                                     <TableCell className={classes.tableCell}>{inscripcion.alumno.nombre} {inscripcion.alumno.apellido}</TableCell>
                                                     <TableCell className={classes.tableCell}>{inscripcion.servicios.map(servicio => servicio.nombre).join(",")}</TableCell>
-                                                    <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.setState({ inscripcionSeleccionada: 
-                                                        {...inscripcion, idTitular:this.state.titular.dni}, serviciosModalVisible: true })}>
-                                                        Modificar inscripcion<Edit />
+                                                    <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.setState({
+                                                        inscripcionSeleccionada:
+                                                            { ...inscripcion, idTitular: this.state.titular.dni }, serviciosModalVisible: true
+                                                    })}>
+                                                        Modificar<Edit />
+                                                    </Button></TableCell>
+                                                    <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button" onClickCapture={() => this.setState({ alertaVisible: true, inscripcionSeleccionada: inscripcion })}>
+                                                        Eliminar<DeleteIcon />
                                                     </Button></TableCell>
                                                 </TableRow>))}
                                         </TableBody>

@@ -20,6 +20,7 @@ import NuevoTitularModal from "./modals/NuevoTitularModal";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import View from '@material-ui/icons/Visibility';
+import Alerta from '../../componentes/Alerta';
 
 let styles = theme => ({
     root: {
@@ -71,7 +72,7 @@ class Titulares extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            titulares: [], cargando: true, message: "", pagina: 0,
+            titulares: [], cargando: true, message: "", pagina: 0, alertaVisible: false,
             filasPorPagina: 6, filas: [], modalNuevoTitularVisible: false, titular: null
         };
         this.props = props;
@@ -100,6 +101,22 @@ class Titulares extends React.Component {
         this.setState({ pagina: 0, filasPorPagina: event.target.value });
     };
 
+    onEliminarTitular = (eliminar) => {
+        this.setState({ alertaVisible: false });
+        if (eliminar) {
+            servicioTitulares.eliminarTitular(this.state.titular.id).then(
+                (respuesta) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(respuesta);
+                },
+                (error) => {
+                    this.setState({ cargando: false });
+                    this.props.mostrarMensaje(error);
+                }
+            );
+        }
+    }
+
     render = () => {
         let { classes } = this.props;
         let { filas, filasPorPagina, pagina } = this.state;
@@ -108,6 +125,7 @@ class Titulares extends React.Component {
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Titulares</Typography>
+                        <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar este titular?"} onClose={this.onEliminarTitular} visible={this.state.alertaVisible} />
                         <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => this.setState({ modalNuevoTitularVisible: true })}>
                             <AddIcon className={classes.extendedIcon} />
                             Nuevo titular</Fab>
@@ -119,7 +137,7 @@ class Titulares extends React.Component {
                         ><NuevoTitularModal cerrarModal={() => {
                             this.setState({ modalNuevoTitularVisible: false });
                             this.getTitulares();
-                        }} mostrarMensaje={this.props.mostrarMensaje} /></Modal>
+                        }} mostrarMensaje={this.props.mostrarMensaje} titular={this.state.titular}/></Modal>
                         <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
@@ -149,10 +167,10 @@ class Titulares extends React.Component {
                                             <TableCell className={classes.tableCell}>{titular.apellido}</TableCell>
                                             <TableCell className={classes.tableCell}>{titular.direccion}</TableCell>
                                             <TableCell className={classes.tableCell}>{titular.mail}</TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button" onClickCapture={() => this.setState({ alertaVisible: true, titular: titular })}>
                                                 Eliminar<DeleteIcon />
                                             </Button></TableCell>
-                                            <TableCell className={classes.tableCell}><Button variant="contained" color="secondary" className="button">
+                                            <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.setState({ modalNuevoTitularVisible: true, titular: titular })}>
                                                 Modificar<Edit />
                                             </Button></TableCell>
                                             <TableCell className={classes.tableCell}><Button variant="contained" color="primary" className="button" onClickCapture={() => this.props.history.push({

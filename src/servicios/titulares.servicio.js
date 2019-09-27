@@ -5,7 +5,9 @@ export const servicioTitulares = {
     nuevoTitular,
     listarTitulares,
     getTitular,
-    registrarCobro
+    registrarCobro,
+    modificarTitular,
+    eliminarTitular
 };
 
 function nuevoTitular(body) {
@@ -52,6 +54,31 @@ function registrarCobro(body) {
         body: JSON.stringify(body)
     };
     return fetch(`/titulares/cobro`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function modificarTitular(body) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: headerAutenticacion(),
+        body: JSON.stringify(body)
+    };
+    return fetch(`/titulares`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function eliminarTitular(id) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: headerAutenticacion(),
+    };
+    return fetch(`/titulares/${id}`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;

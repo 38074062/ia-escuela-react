@@ -70,18 +70,33 @@ class NuevoAdicionalModal extends React.Component {
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
         var cerrarModal = this.props.cerrarModal;
-        servicioServicios.nuevoServicio(datos)
-            .then(
-                (respuesta) => {
-                    mostrarMensaje(respuesta);
-                    actions.setSubmitting(false);
-                    cerrarModal();
-                },
-                (error) => {
-                    mostrarMensaje(error);
-                    actions.setSubmitting(false);
-                }
-            );
+        if (this.props.servicio) {
+            servicioServicios.modificarServicio(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        actions.setSubmitting(false);
+                        cerrarModal();
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                    }
+                );
+        } else {
+            servicioServicios.nuevoServicio(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        actions.setSubmitting(false);
+                        cerrarModal();
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                    }
+                );
+        }
     }
 
     render = () => {
@@ -94,10 +109,10 @@ class NuevoAdicionalModal extends React.Component {
                         Nuevo servicio</Typography>
                     <Formik
                         initialValues={{
-                            categoria: "",
-                            nombre: "",
-                            tipo: "",
-                            precio: 0
+                            categoria: (this.props.servicio && this.props.servicio.categoria) || "",
+                            nombre: (this.props.servicio && this.props.servicio.nombre) || "",
+                            tipo: (this.props.servicio && this.props.servicio.tipo) || "",
+                            precio: (this.props.servicio && this.props.servicio.precio) || 0
                         }}
                         validationSchema={NuevoAdicionalSchema}
                         onSubmit={this.onSubmit.bind(this)}

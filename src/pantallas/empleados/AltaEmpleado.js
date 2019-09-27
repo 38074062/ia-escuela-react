@@ -60,6 +60,7 @@ class AltaEmpleado extends Component {
             let opcionesCargos = this.convertirCargos(cargos);
             this.setState({ cargos: opcionesCargos });
         });
+
     }
 
     convertirCargos = (cargos) => {
@@ -76,18 +77,34 @@ class AltaEmpleado extends Component {
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
         var navegacion = this.props.history;
-        servicioEmpleados.altaEmpleado(datos)
-            .then(
-                (respuesta) => {
-                    mostrarMensaje(respuesta);
-                    navegacion.push("/empleados");
-                },
-                (error) => {
-                    mostrarMensaje(error);
-                    actions.setSubmitting(false);
-                    actions.setErrors({ "dni": error });
-                }
-            );
+        if (this.props.location && this.props.location.state && this.props.location.state.empleado) {
+            datos.id = this.props.location.state.empleado.id;
+            servicioEmpleados.modificarEmpleado(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        navegacion.push("/empleados");
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                        actions.setErrors({ "dni": error });
+                    }
+                );
+        } else {
+            servicioEmpleados.altaEmpleado(datos)
+                .then(
+                    (respuesta) => {
+                        mostrarMensaje(respuesta);
+                        navegacion.push("/empleados");
+                    },
+                    (error) => {
+                        mostrarMensaje(error);
+                        actions.setSubmitting(false);
+                        actions.setErrors({ "dni": error });
+                    }
+                );
+        }
     }
 
     render() {
@@ -101,12 +118,12 @@ class AltaEmpleado extends Component {
             </Typography>
                     <Formik
                         initialValues={{
-                            nombre: "",
-                            apellido: "",
-                            nombreUsuario: "",
-                            cuit: "",
-                            dni: "",
-                            cargo: 0
+                            nombre: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.nombre) || "",
+                            apellido: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.apellido) || "",
+                            nombreUsuario: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.nombreUsuario) || "",
+                            cuit: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.cuit) || "",
+                            dni: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.dni) || "",
+                            cargo: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.cargo) || 0
                         }}
                         validationSchema={AltaEmpleadoSchema}
                         onSubmit={this.onSubmit.bind(this)}
