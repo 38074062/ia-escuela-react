@@ -214,7 +214,6 @@ class Titular extends React.Component {
                                                     <TableCell className={classes.tableCell}>{factura.fechaVencimiento}</TableCell>
                                                     <TableCell className={classes.tableCell}>
                                                         {factura.detalle.split("/n").map(function (item, key) {
-                                                            console.log(item)
                                                             return (
                                                                 <Typography key={key}>
                                                                     {item}
