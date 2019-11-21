@@ -7,7 +7,8 @@ export const servicioEmpleados = {
     listarCargos,
     agregarCargaHoraria,
     eliminarEmpleado,
-    modificarEmpleado
+    modificarEmpleado,
+    liquidarSueldos
 };
 
 function altaEmpleado(body) {
@@ -79,6 +80,19 @@ function eliminarEmpleado(id) {
         headers: headerAutenticacion(),
     };
     return fetch(`/empleados/${id}`, requestOptions)
+        .then(manejarRespuesta)
+        .then(respuesta => {
+            return respuesta;
+        });
+}
+
+function liquidarSueldos(){
+    const requestOptions = {
+        method: 'GET',
+        headers: headerAutenticacion(),
+    };
+
+    fetch(`/empleados/sueldos`, requestOptions)
         .then(manejarRespuesta)
         .then(respuesta => {
             return respuesta;

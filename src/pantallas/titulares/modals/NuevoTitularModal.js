@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles'
 import { Typography, Button, Grid, CssBaseline, CircularProgress } from '@material-ui/core';
 import { Formik, Form } from 'formik';
-import { FormikTextField } from 'formik-material-fields';
+import { FormikTextField, FormikCheckboxField } from 'formik-material-fields';
 import * as Yup from 'yup';
 import { servicioTitulares } from '../../../servicios/titulares.servicio';
 
@@ -44,12 +44,14 @@ const NuevoTitularSchema = Yup.object().shape({
     nombre: Yup.string().required('Ingrese el nombre del titular'),
     apellido: Yup.string().required('Ingrese el apellido del titular'),
     direccion: Yup.string().required('Ingrese la dirección del titular'),
-    email: Yup.string().required('Ingrese el mail del titular'),
-    cuentaBancaria: Yup.string()
-        .required('Ingrese la cuenta bancaria')
+    email: Yup.string().required('Ingrese el mail del titular')
 });
 
 class NuevoTitularModal extends React.Component {
+    state = {
+        pagoTransferencia: false,
+        pagoTarjeta: false
+    }
 
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
@@ -69,6 +71,7 @@ class NuevoTitularModal extends React.Component {
                     }
                 );
         } else {
+            datos.metodoPago.type = this.state.pagoTarjeta ? "tarjetaCredito" : "transferenciaBancaria";
             servicioTitulares.nuevoTitular(datos)
                 .then(
                     (respuesta) => {
@@ -100,7 +103,9 @@ class NuevoTitularModal extends React.Component {
                             dni: (this.props.titular && this.props.titular.dni) || 0,
                             direccion: (this.props.titular && this.props.titular.direccion) || "",
                             email: (this.props.titular && this.props.titular.email) || "",
-                            cuentaBancaria: (this.props.titular && this.props.titular.cuentaBancaria) || "",
+                            metodoPago: (this.props.titular && this.props.titular.metodoPago) || {
+                                debitoAutomatico: false
+                            },
                         }}
                         validationSchema={NuevoTitularSchema}
                         onSubmit={this.onSubmit.bind(this)}
@@ -112,7 +117,27 @@ class NuevoTitularModal extends React.Component {
                                     <FormikTextField name="apellido" label="Apellido" margin="normal" fullWidth />
                                     <FormikTextField name="direccion" label="Direccion" margin="normal" fullWidth />
                                     <FormikTextField name="email" label="Email" margin="normal" type="email" fullWidth />
-                                    <FormikTextField name="cuentaBancaria" label="Cuenta bancaria" margin="normal" fullWidth />
+                                    <Typography component="h6" variant="body1">
+                                        Métodos de pago disponibles </Typography>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            <Button onClick={() => this.setState({ pagoTarjeta: true, pagoTransferencia: false })} color="primary">Tarjeta</Button>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Button onClick={() => this.setState({ pagoTarjeta: false, pagoTransferencia: true })} color="primary">Transferencia</Button>
+                                        </Grid>
+                                    </Grid>
+                                    <FormikCheckboxField name="metodoPago.debitoAutomatico" label="Débito Automático" labelPlacement="end" />
+                                    {this.state.pagoTarjeta && (
+                                        <Grid item xs={12}>
+                                            <FormikTextField name="metodoPago.nroTarjeta" label="Número de tarjeta" margin="normal" fullWidth />
+                                            <FormikTextField name="metodoPago.codSeg" label="Código de seguridad" type="password" margin="normal" fullWidth />
+                                        </Grid>)}
+                                    {this.state.pagoTransferencia && (
+                                        <Grid container>
+                                            <FormikTextField name="metodoPago.cuentaBancaria" label="CBU" margin="normal" fullWidth />
+                                        </Grid>
+                                    )}
                                 </Grid>
                                 <Grid container
                                     alignItems="center"

@@ -73,7 +73,10 @@ class CobroFacturaModal extends React.Component {
                     <Formik
                         initialValues={{
                             titularId: this.props.titularId,
-                            facturaId: this.props.facturaId
+                            facturaId: this.props.facturaId,
+                            metodoPago: {
+                                debitoAutomatico: false,
+                            }
                         }}
                         validationSchema={CobroFacturaSchema}
                         onSubmit={this.onSubmit.bind(this)}
@@ -82,6 +85,23 @@ class CobroFacturaModal extends React.Component {
                                 <Grid item xs={12}>
                                     <FormikTextField name="fecha" label="Fecha" type="date" margin="normal" fullWidth />
                                     <FormikTextField name="monto" label="Monto" type="number" margin="normal" fullWidth />
+                                    
+                                    {this.state.pagoTarjeta && (
+                                        <Grid container>
+                                            <FormikTextField name="metodoPago.nroTarjeta" label="Número" type="number" margin="normal" fullWidth />
+                                            <FormikTextField name="metodoPago.codSeg" label="Código de seguridad" type="password" margin="normal" fullWidth />
+                                        </Grid>)}
+                                    {this.state.pagoTransferencia && (
+                                        <Grid container>
+                                            <FormikTextField name="metodoPago.cuentaBancaria" label="CBU" type="number" margin="normal" fullWidth />
+                                        </Grid>
+                                    )}
+                                    <Grid item xs={6}>
+                                        <Button onClick={() => this.setState({ pagoTarjeta: true, pagoTransferencia: false })} color="primary">Tarjeta</Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button onClick={() => this.setState({ pagoTarjeta: false, pagoTransferencia: true })} color="primary">Transferencia</Button>
+                                    </Grid>
                                 </Grid>
                                 <Grid container
                                     alignItems="center"

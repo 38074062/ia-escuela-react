@@ -18,6 +18,8 @@ import { servicioEmpleados } from '../../servicios/empleados.servicio';
 import { Modal } from '@material-ui/core';
 import CargaHorariaModal from './modals/CargaHorariaModal';
 import Alerta from '../../componentes/Alerta';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 let styles = theme => ({
     root: {
@@ -111,6 +113,17 @@ class Empleados extends React.Component {
         }
     }
 
+    liquidarSueldos = () =>{
+        servicioEmpleados.liquidarSueldos().then(
+            (respuesta) => {
+                this.props.mostrarMensaje(respuesta);
+            },
+            (error) => {
+                this.props.mostrarMensaje(error);
+            }
+        );
+    }
+
     render = () => {
         let { classes } = this.props;
         let { filas, filasPorPagina, pagina } = this.state;
@@ -120,6 +133,9 @@ class Empleados extends React.Component {
                     <Paper className={classes.paper}>
                         <Typography className={classes.typography} variant="h5">Empleados</Typography>
                         <Alerta titulo={"Atención"} descripcion={"¿Está seguro de eliminar este empleado?"} onClose={this.onEliminarEmpleado} visible={this.state.alertaVisible} />
+                        <Fab variant="extended" color="primary" aria-label="Add" className={classes.addFab} onClickCapture={() => this.liquidarSueldos()}>
+                            <AddIcon className={classes.extendedIcon} />
+                            Liquidar sueldos</Fab>
                         <Modal
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"

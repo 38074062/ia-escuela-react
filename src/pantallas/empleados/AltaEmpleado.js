@@ -123,7 +123,8 @@ class AltaEmpleado extends Component {
                             nombreUsuario: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.nombreUsuario) || "",
                             cuit: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.cuit) || "",
                             dni: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.dni) || "",
-                            cargo: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.cargo) || 0
+                            cargo: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.cargo) || 0,
+                            cbu: (this.props.location.state && this.props.location.state.empleado && this.props.location.state.empleado.cbu) || ""
                         }}
                         validationSchema={AltaEmpleadoSchema}
                         onSubmit={this.onSubmit.bind(this)}
@@ -136,6 +137,7 @@ class AltaEmpleado extends Component {
                                     <FormikTextField name="nombreUsuario" label="Mail" margin="normal" fullWidth />
                                     <FormikTextField name="cuit" label="CUIT" margin="normal" fullWidth />
                                     <FormikSelectField name="cargo" label="Cargo" margin="normal" options={this.state.cargos} fullWidth />
+                                    <FormikTextField name="cbu" label="CBU" margin="normal" fullWidth />
                                 </Grid>
                                 <Grid container
                                     alignItems="center"
