@@ -45,9 +45,15 @@ const CobroFacturaSchema = Yup.object().shape({
 });
 
 class CobroFacturaModal extends React.Component {
+    state = {
+        pagoTarjeta: false,
+        pagoTransferencia: false
+    }
+
     onSubmit = (datos, actions) => {
         var mostrarMensaje = this.props.mostrarMensaje;
         var cerrarModal = this.props.cerrarModal;
+        datos.metodoPago.type = this.state.pagoTarjeta ? "tarjetaCredito" : "transferenciaBancaria";
         servicioTitulares.registrarCobro(datos)
             .then(
                 (respuesta) => {
@@ -85,7 +91,7 @@ class CobroFacturaModal extends React.Component {
                                 <Grid item xs={12}>
                                     <FormikTextField name="fecha" label="Fecha" type="date" margin="normal" fullWidth />
                                     <FormikTextField name="monto" label="Monto" type="number" margin="normal" fullWidth />
-                                    
+
                                     {this.state.pagoTarjeta && (
                                         <Grid container>
                                             <FormikTextField name="metodoPago.nroTarjeta" label="Número" type="number" margin="normal" fullWidth />
